@@ -1,4 +1,7 @@
 $(document).ready(function() {
+
+    /************* 카테고리 관리****************/
+
     // 카테고리를 클릭할 경우 -> 선택 상태로 변경
     var activate = function() {
         $('.component.selected').removeClass('selected');
@@ -6,6 +9,8 @@ $(document).ready(function() {
     }
     // 각 카테고리에 클릭 이벤트 연결
     $('.component').click(activate);
+
+
 
     $('#up_button').click(function() {
         var prev = $('.selected').prev();
@@ -40,6 +45,8 @@ $(document).ready(function() {
         }
     });
 
+
+
     // down 버튼을 누를 경우
     $('#down_button').click(function() {
         // selected 된 대상이 일반 카테고리인 경우
@@ -73,6 +80,8 @@ $(document).ready(function() {
         }
     });
 
+
+
     // 추가 버튼을 누른 경우
     $('#update_cate').click(function() {
         var name = $('.add_cate').val();
@@ -102,9 +111,19 @@ $(document).ready(function() {
         }
         // 동일 레벨의 카테고리로 추가하는 경우
         else {
-            $('.selected').after(li);
+            // .selected 되어있는 카테고리가 서브카테고리를 가진 카테고리 인 경우
+            if($('.selected').next().hasClass('subcate')) {
+                // 서브 카테고리 리스트 뒤에 추가
+                $('.selected').next().after(li);
+            }
+            // .selected 되어있는 카테고리가 일반 카테고리인 경우
+            else {
+                $('.selected').after(li);
+            }
         }
     })
+
+
 
     // 삭제 버튼을 누른 경우 => ajax로 처리( 카테고리 안에 게시물이 존재할 경우 삭제 불가 + 데이터베이스에서 한 번에 처리를 위한 비교가 힘듬.)
     $('#del_button').click(function() {
@@ -127,22 +146,43 @@ $(document).ready(function() {
         }
     });
 
+
+
     // 저장 버튼을 누른 경우
     $('#save_cate').click(function() {
         var list_category = [];
 
         $('.component').each(function(index, item) {
             var type; // 카테고리 타입
+            var title_category = null; // 제목 카테고리
             // 서브 카테고리인 경우
             if($(item).parent().parent().hasClass('subcate')) {
                 type = 'sub';
+                title_category = $(item).parent().parent().prev().text();
             }
             else {
-                type = 'main'
+                // 일반 카테고리인 경우
+                type = 'main';
             }
-            //list_category.push(item.html());
-        })
+            // 배열에 각 카테고리 정보 저장.
+            list_category.push({
+                type: type,
+                parent: title_category,
+                name: $(item).text()
+            });
+        });
+        // input 태그에 삽입 후 submit
+        $('#list_category').val(list_category);
+        $('#submit_category').submit();
+    });
 
-        console.log(list_category);
-    })
-})
+    /************* 즐겨찾기 관리 ****************/
+
+    // 카테고리를 클릭할 경우 -> 선택 상태로 변경
+    var activate = function() {
+        $('.bookmark_list li.selected').removeClass('selected');
+        $(this).addClass('selected');
+    }
+    // 각 카테고리에 클릭 이벤트 연결
+    $('.bookmark_list li').click(activate);
+});

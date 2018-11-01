@@ -4198,6 +4198,11 @@
 		cursor: pointer;
 	}
 
+	.cate_manage {
+		height: 450px;
+		overflow-y: scroll;
+	}
+
 	.component:hover {
 		background-color: #eeeeee;
 	}
@@ -4211,20 +4216,53 @@
 		padding: 0;
 	}
 
-	.category {
+	.category, .tag_manage{
 		padding-right: 15px;
-		border-right: 1.5px solid rgb(182, 173, 173)
+		border-right: 1.5px solid rgb(182, 173, 173);
+		height: 800px;
 	}
 
 	.category hr {
 		margin-top: 0;
 	}
 
-	#save_cate {
+	#submit_category {
 		float: right;
 	}
 
 	.check_sub {
 		float: right;
 		margin-top: 1em;
+	}
+
+	.add_bookmark, .bookmark_url {
+		margin-bottom: 10px;
+	}
+
+	#del_bookmark {
+		float: right;
+	}
+
+	.bookmark_list .selected {
+		background-color: #f56a6aa4;
+		border-radius: 5px;
+	}
+
+	.bookmark_list li {
+		padding: 0;
+		cursor: pointer;
+	}
+
+	.bookmark_list li:hover {
+		background-color: #f56a6a3f;
+		border-radius: 5px;
+	}
+
+
+	/** admin_login.html **/
+
+	.login_section {
+		text-align: center;
+		width: 500px;
+		margin: auto;
 	}

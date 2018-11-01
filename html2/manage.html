@@ -45,7 +45,10 @@
                                         <div class="4u 12u$(small) category">
 											<div class="row">
 												<h3>카테고리 관리</h3>
-												<a href="#" class="button special" id="save_cate">저장</a>
+												<form method="POST" id="submit_category">
+													<a href="#" class="button special" id="save_cate">저장</a>
+													<input type="hidden" value="" name="list_category" id="list_category" />
+												</form>
 											</div>
                                             <div class="row">
                                                 <div class="9u 12u$(small) cate_manage">
@@ -90,13 +93,24 @@
 												<label for="is_sub">서브 카테고리</label>
 											</span>
                                         </div>
-                                        <div class="4u 12u$(small)">
-                                            <h3>Faucibus consequat lorem</h3>
-                                            <p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit.</p>
+                                        <div class="4u 12u$(small) tag_manage">
+											<h3>Accumsan montes viverra</h3>
+											<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit.</p>
                                         </div>
                                         <div class="4u$ 12u$(small)">
-                                            <h3>Accumsan montes viverra</h3>
-                                            <p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit.</p>
+											<h3>즐겨찾기 관리</h3>
+											<div class="box">
+												<ul class="alt bookmark_list">
+													<li>Dolor etiam magna etiam.</li>
+													<li>Sagittis lorem eleifend.</li>
+													<li>Felis feugiat viverra.</li>
+												</ul>
+											</div>
+											<h4>즐겨찾기 추가</h4>
+											<input type="text" class="add_bookmark" name="add_bookmark" id="add_bookmark" value="" placeholder="즐겨찾기 이름" />
+											<input type="url" class="bookmark_url" name="bookmark_url" value="" placeholder="URL" />
+											<a class="button special" id="update_bookmark">추가</a>
+											<a class="button special" id="del_bookmark">삭제</a>
                                         </div>
                                     </div>
 								</section>
