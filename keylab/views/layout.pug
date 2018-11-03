@@ -1,0 +1,66 @@
+doctype
+html
+    head
+        title KEYLAB
+        meta(charset='utf-8')
+        meta(name='viewport' content="width=device-width, initial-scale=1, user-scalable=no")
+        link(rel="stylesheet" href="assets/css/main.css")
+    body
+        #wrapper
+            #main
+                .inner
+                    header(id="header")
+                        a(href="sample" class="logo")
+                            strong KYELAB
+                        ul(class="icons")
+                            li: a(href="#" class="icon fa-twitter")
+                                span(class="label") Twitter
+                            li: a(href="#" class="icon fa-facebook")
+                                span(class="label") Facebook
+                            li: a(href="#" class="icon fa-snapchat-ghost")
+                                span(class="label") Snapchat
+                            li: a(href="#" class="icon fa-instagram")
+                                span(class="label") Instagram
+                            li: a(href="#" class="icon fa-medium")
+                                span(class="label") Medium
+                    block content
+
+            #sidebar
+                .inner
+                    section(id="search" class="alt")
+                        form(method="post" action="sample")
+                            input(type="text" name="query" id="query" placeholder="Search")
+                    nav(id="menu")
+                        header(class="major")
+                            h2 Menu                        
+                        ul
+                            for category in categories
+                                if !(category.subcategories.length)
+                                    li
+                                        a= category.name
+                                else
+                                    li
+                                        span(class="opener") #{category.name}
+                                        ul
+                                            for subcategory in category.subcategories
+                                                li
+                                                    a= subcategory.name
+                    nav(id="menu")
+                        header(class="major")
+                            h2 BookMark
+                        ul
+                            for bookmark in bookmarks
+                                li
+                                    a(href="#{bookmark.URL}")= bookmark.title
+                    section
+                        header(class="major")
+                            h2 Get in touch
+                        ul(class="contact")
+                            li(class="fa-envelope-o") kye139@gmail.com
+                            li(class="fa-phone") (000)  000-0000
+                    footer(id="footer")
+                        p(class="copyright") Untitled. All rights reserved. Demo Images:
+        script(src="assets/js/jquery.min.js")
+        script(src="assets/js/skel.min.js")
+        script(src="assets/js/util.js")
+        script(src="assets/js/main.js")

@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    section(id="banner")
+        .content
+            header
+                h1 Welcome to the KYELAB
+                    br
+                p A free and fully responsive site teplate
+            
+            p Aenean ornare velit lacus, ac varius enim ullamcorper eu. Proin aliquam facilisis ante interdum congue. Integer mollis, nisl amet convallis, porttitor magna ullamcorper, amet egestas mauris. Ut magna finibus nisi nec lacinia. Nam maximus erat id euismod egestas. Pellentesque sapien ac quam. Lorem ipsum dolor sit nullam.
+            span(class="image object")
+                img(src="#" alt="img")
+    section
+        header(class="major")
+            h2 공지사항
+        .more
+            a(href="#") 더보기
+        .table-wrapper
+            table
+                thead
+                    tr
+                        th 작성일
+                        th 제목
+                tbody
+                    for notice in notices
+                        tr
+                            td= notice.title
+                            td= notice.contents
+    section
+        header(class="major")
+            h2 최신 글 목록
+        .posts
+            article
+                
+                    

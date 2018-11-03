@@ -4116,9 +4116,49 @@
 	.comt p {
 		margin:0 0 1em 0;
 	}
+	.comment_btn {
+		text-align: right;
+	}
+
+	.comt hr {
+		border-style: dotted;
+	}
+
+	.comt blockquote {
+		border: none;
+		font-style: normal;
+	}
 
 	.edit_del {
 		border-color: black;
+	}
+
+	.content_btn {
+		text-align: right;
+		color: black;
+	}
+
+	#reply .uniform, #edit .uniform, #delete .uniform {
+		display: none;
+	}
+
+	#reply .selected, #edit .selected, #delete .selected {
+		display: block;
+	}
+
+	#reply .uniform {
+		margin-top: 10px;
+	}
+
+	#delete div {
+		width: 300px;
+		text-align: center;
+		margin: auto;
+	}
+
+	.error p {
+		color: red;
+		font-weight: bold;
 	}
 
 	/** notice.html **/
@@ -4265,4 +4305,29 @@
 		text-align: center;
 		width: 500px;
 		margin: auto;
+	}
+
+	/** index.html **/
+	.more {
+		text-align: right;
+		margin-right: 10px;
+	}
+
+	.more a {
+		border-bottom: none;
+		color: black;
+		font-weight: bolder
+	}
+
+	.tag_menu .box {
+		height: 200px;
+	}
+
+	/** notice_list.html **/
+	.notice_list tr{
+		cursor: pointer;
+	}
+
+	.notice_list tr:hover {
+		background-color: #eeeeee
 	}

@@ -1,37 +1,38 @@
-'use strict';
-
-const fs = require('fs');
-const path = require('path');
 const Sequelize = require('sequelize');
-const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/..\config\config.json')[env];
+const config = require('../config/config')[env];
 const db = {};
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
-
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-  })
-  .forEach(file => {
-    const model = sequelize['import'](path.join(__dirname, file));
-    db[model.name] = model;
-  });
-
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+db.User = require('./user')(sequelize, Sequelize);
+db.Content = require('./content')(sequelize, Sequelize);
+db.Tag = require('./tag')(sequelize, Sequelize);
+db.Comment = require('./comment')(sequelize, Sequelize);
+db.Notice = require('./notice')(sequelize, Sequelize);
+db.Link = require('./link')(sequelize, Sequelize);
+db.Maincategory = require('./maincategory')(sequelize, Sequelize);
+db.Subcategory = require('./subcategory')(sequelize, Sequelize);
+
+db.Maincategory.hasMany(db.Content, { onDelete: 'restrict'});
+db.Content.belongsTo(db.Maincategory);
+
+db.Maincategory.hasMany(db.Subcategory, {onDelete: 'restrict'});
+db.Subcategory.belongsTo(db.Maincategory);
+
+db.Subcategory.hasMany(db.Content, { onDelete: 'restrict'});
+db.Content.belongsTo(db.Subcategory);
+
+db.Content.belongsToMany(db.Tag, { through: 'ContentTag' });
+db.Tag.belongsToMany(db.Content, { through: 'ContentTag'});
+
+db.Content.hasMany(db.Comment, { onDelete: 'cascade'});
+db.Comment.belongsTo(db.Content);
+
+db.Comment.hasMany(db.Comment, { onDelete: 'restrict' });
+db.Comment.belongsTo(db.Comment, { as: 'parent'});
 
 module.exports = db;
