@@ -1,0 +1,58 @@
+extends ../layout
+
+block content
+    section
+        header(class="major")
+            h2 관리 페이지
+        .row
+            div(class="4u 12u$(small) category")
+                .row
+                    h3 카테고리 관리
+                    form(method="POST" id="submit_category")
+                        a(href="#" class="button special" id="save_cate") 저장
+                        input(type="hidden" value="" name="list_category" id="list_category")
+                .row
+                    div(class="9u 12u$(small) cate_manage")
+                        ul(class="alt maincate")
+                            if categories
+                                for category in categories
+                                    if !(category.subcategories.length)
+                                        li(class="component")= category.name
+                                    else
+                                        li(class="subcate")
+                                            ul
+                                                for subcategory in category.subcategories
+                                                    li(class="component")= subcategory.name
+                    div(class="3u 12u$(small)")
+                        ul(class="actions vertical")
+                            li(id="up_button")
+                                a(class="button fit small")
+                                    i(class="fas fa-arrow-up")
+                            li(id="down_button")
+                                a(class="button fit small")
+                                    i(class="fas fa-arrow-down")
+                            li(id="del_button")
+                                a(class="button fit small") 삭제
+                hr
+                h4 카테고리 추가
+                input(type="text" class="add_cate" name="add_cate" id="add_cate" value="" placeholder="카테고리 이름")
+                a(class="button special" id="update_cate") 추가
+                span(class="check_sub")
+                    input(type="checkbox" id="is_sub" name="is_sub")
+                    label(for="is_sub") 서브 카테고리
+            div(class="4u 12u$(small) tag_manage")
+                h3 Accumsan montes viverra
+                p Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit.
+            div(class="4u$ 12u$(small)")
+                h3 즐겨찾기 관리
+                .box
+                    ul(class="alt bookmark_list")
+                        for bookmark in bookmarks
+                            li
+                                a(href=bookmark.URL class="link")= bookmark.title
+                h4 즐겨찾기 추가
+                input(type="text" class="add_bookmark" name="add_bookmark" id="add_bookmark" value="" placeholder="즐겨찾기 이름")
+                input(type="url" class="bookmark_url" name="bookmark_url" value="" placeholder="URL")
+                a(class="button special" id="update_bookmark") 추가
+                a(class="button special" id="del_bookmark") 삭제
+

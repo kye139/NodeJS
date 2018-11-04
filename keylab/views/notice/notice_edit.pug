@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+    script(src="/editor/ckeditor.js")
+    section
+        header(class="major")
+            h2 공지사항
+
+        form(method="POST" action="/notice/edit" class="edit_notice")
+            hr
+            input(type="hidden" name="id" value=notice.id)
+            div(class="12u$(xsmall) notice_title")
+                input(type="text" name="title" id="notice-title" value=notice.title placeholder="제목" required)
+            div(class="12u$ notice_content")
+                textarea(name="editor1" id="editor1" rows="10" cols="80") #{notice.contents}
+                script.
+                    CKEDITOR.replace( 'editor1', {
+                        filebrowserUploadUrl: '/upload',
+                        extraPlugins : 'image2',
+                        height: 300
+                    }); 
+            hr
+            a(class="button special" id="editing") 게시글 수정
+    script.
+        $('document').ready(function() {
+            $('#editing').click(function() {
+                if(confirm('정말 수정하시겠습니까?')) {
+                    $('.edit_notice').submit();    
+                }
+            });
+        });

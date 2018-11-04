@@ -1,0 +1,43 @@
+doctype
+html
+    head
+        title KEYLAB
+        meta(charset='utf-8')
+        meta(name='viewport' content="width=device-width, initial-scale=1, user-scalable=no")
+        link(rel="stylesheet" href="assets/css/main.css")
+        script(src="assets/js/jquery.min.js")
+        script(src="/assets/js/login.js")
+    body
+        #wrapper
+            #main
+                .inner
+                    header(id="header")
+                        a(href="sample" class="logo")
+                            strong KYELAB
+                        ul(class="icons")
+                            li: a(href="#" class="icon fa-twitter")
+                                span(class="label") Twitter
+                            li: a(href="#" class="icon fa-facebook")
+                                span(class="label") Facebook
+                            li: a(href="#" class="icon fa-snapchat-ghost")
+                                span(class="label") Snapchat
+                            li: a(href="#" class="icon fa-instagram")
+                                span(class="label") Instagram
+                            li: a(href="#" class="icon fa-medium")
+                                span(class="label") Medium
+
+    
+        section(class="login_section")
+            h4 관리자 로그인
+            form(method="POST", action="/admin_login/join", id="login_form")
+                table
+                    tr
+                        td 아이디:
+                        td
+                            input(type="text" name="admin_id" id="admin_id" value="" placeholder="아이디")
+                    tr
+                        td 비밀번호:
+                        td
+                            input(type="password" name="admin_password" id="admin_password" value="" placeholder="비밀번호")
+                p= loginError
+                a(class="button small login") 로그인

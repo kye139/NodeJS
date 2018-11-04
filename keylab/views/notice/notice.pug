@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+    section(class="print_notice")
+        input(type="hidden" name="id" id="notice_id" value=notice.id)
+        header(class="major")
+            .row
+                h2= notice.title
+                - var date = new Date(notice.createdAt).toLocaleDateString()
+                span(class="post_date") #{date}
+                
+        div !{notice.contents}
+    hr
+    .notice_btn
+        a(class="button verysmall list_btn")
+            i(class="fas fa-list-ul")
+            | 목록
+        if user
+            a(class="button verysmall edit_btn")
+                i(class="fas fa-edit")
+                | 수정
+            a(class="button verysmall delete_btn")
+                i(class="fas fa-eraser")
+                | 삭제
+    script.
+        $('document').ready(function() {
+            $('.list_btn').click(function() {
+                location.href='/notice/list/1';
+            });
+            $('.edit_btn').click(function() {
+                var id = $('#notice_id').val();
+                location.href = '/notice/edit/' + id;
+            })
+            $('.delete_btn').click(function() {
+                var id = $('#notice_id').val();
+                location.href = '/notice/delete/' + id;
+            })
+        })
+        

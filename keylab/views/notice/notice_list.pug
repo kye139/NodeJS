@@ -1,0 +1,82 @@
+extends ../layout
+
+block content
+    section
+        header(class="major")
+            h2 공지사항
+        
+        div(class="table-wrapper notice_list")
+            table
+                thead
+                    tr
+                        th(class="num") 글 번호
+                        th(class="date") 작성일
+                        th 제목
+                tbody
+                    if notices
+                        for notice in notices
+                            tr
+                                td(class="notice_id")= notice.id
+                                - var date = new Date(notice.createdAt)
+                                td= date.toLocaleDateString()
+                                td= notice.title
+            if user
+                .notice_write.btn
+                    a(href="/notice/write" class="button special" id="write") 글쓰기
+            .page
+                ul(class="pagination")
+                    li
+                        - if(number == 1)
+                            span(class="button disabled") 첫페이지
+                        - else
+                            span(class="button") 첫페이지
+
+                    - var page_count = Math.ceil(parseFloat(notice_count) / 15.0);
+                    - if (page_count > 7)
+                        - if (parseInt(number) <= 4)
+                            - for(var i=1; i<parseInt(number); i++)
+                                li
+                                    a(href="#" class="page") #{i}
+                            li
+                                a(href="#" class="page active") #{number}
+                            - for(var i=parseInt(number)+1; i<8; i++)
+                                li
+                                    a(href="#" class="page") #{i}
+                        - else
+                            - for(var i=parseInt(number) - 3; i<parseInt(number); i++)
+                                li
+                                    a(href="#" class="page") #{i}
+                            li
+                                a(href="#" class="page active") #{number}
+                            -for(var i=parseInt(number)+1; i<parseInt(number)+4; i++)
+                                li
+                                    a(href="#" class="page") #{i}
+                    - else
+                        - for(var i=1; i<parseInt(number); i++)
+                            li
+                                a(href="#" class="page") #{i}
+                        li
+                            a(href="#" class="page active") #{number}
+                        - for(i=parseInt(number) + 1; i<=page_count; i++)
+                            li
+                                a(href="#" class="page") #{i}
+                    - if (parseInt(number) == page_count)
+                        li 
+                            a(href="#" class="button disabled") 끝페이지
+                    - else
+                        li
+                            a(href="#" class="button") 끝페이지
+
+    script.
+        $('document').ready(function() {
+            $('.notice_list table tbody tr').click(function() {
+                var id = $(this).children().filter('.notice_id').text();
+                location.href = '/notice/post/' + id;
+            });
+
+            $('.pagination li .page').not($('.active')).click(function() {
+                var num = $(this).text();
+
+                location.href = '/notice/list/' + num;
+            });
+        });

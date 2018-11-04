@@ -8,7 +8,8 @@ const passport = require('passport');
 require('dotenv').config();
 
 const indexRouter = require('./routes/index');
-const writeNoticeRouter = require('./routes/write_notice');
+const NoticeRouter = require('./routes/notice');
+const loginRouter = require('./routes/admin_login');
 
 const { sequelize } = require('./models');
 
@@ -41,7 +42,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', indexRouter);
-app.use('/write_notice', writeNoticeRouter);
+app.use('/notice', NoticeRouter);
+app.use('/admin_login', loginRouter);
 
 app.use((req, res, next) => {
     const err = new Error('Not Found');

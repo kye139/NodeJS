@@ -4116,9 +4116,49 @@
 	.comt p {
 		margin:0 0 1em 0;
 	}
+	.comment_btn {
+		text-align: right;
+	}
+
+	.comt hr {
+		border-style: dotted;
+	}
+
+	.comt blockquote {
+		border: none;
+		font-style: normal;
+	}
 
 	.edit_del {
 		border-color: black;
+	}
+
+	.content_btn {
+		text-align: right;
+		color: black;
+	}
+
+	#reply .uniform, #edit .uniform, #delete .uniform {
+		display: none;
+	}
+
+	#reply .selected, #edit .selected, #delete .selected {
+		display: block;
+	}
+
+	#reply .uniform {
+		margin-top: 10px;
+	}
+
+	#delete div {
+		width: 300px;
+		text-align: center;
+		margin: auto;
+	}
+
+	.error p {
+		color: red;
+		font-weight: bold;
 	}
 
 	/** notice.html **/
@@ -4265,4 +4305,68 @@
 		text-align: center;
 		width: 500px;
 		margin: auto;
+	}
+
+	/** index.html **/
+	.more {
+		text-align: right;
+		margin-right: 10px;
+	}
+
+	.more a {
+		border-bottom: none;
+		color: black;
+		font-weight: bolder
+	}
+
+	.tag_menu .box {
+		height: 200px;
+	}
+
+	/** notice_list.html **/
+	.notice_list thead tr .num {
+		width: 10%
+	}
+	.notice_list thead tr .date{
+		width: 15%;
+	}
+
+	.notice_list tbody tr{
+		cursor: pointer;
+	}
+
+	.notice_list tbody tr:hover {
+		background-color: #eeeeee
+	}
+
+	.notice_list .page a:hover {
+		background-color: #f56a6a3f;
+	}
+
+	.active {
+		cursor: default;
+	}
+
+	/** notice.html **/
+	.notice_btn a {
+		margin-left: 10px;
+	}
+
+	.print_notice {
+		padding: 3em 0 2em 0;
+	}
+
+	.print_notice .row {
+		width: 100%;
+	}
+
+	.print_notice h2 {
+		padding: 0;
+	}
+
+	.print_notice .post_date {
+		float: right;
+		font-weight: bolder;
+		margin-top: 20px;
+		font-size: 14px;
 	}
