@@ -21,7 +21,8 @@ router.get('/', async (req, res) => {
         res.render('index', {
             categories,
             bookmarks,
-            notices
+            notices,
+            user: req.user
         });
     }
     catch(error) {

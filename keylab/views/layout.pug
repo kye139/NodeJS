@@ -12,7 +12,6 @@ html
         script(src="/assets/js/util.js")
         script(src="/assets/js/main.js")
 
-
     body
         #wrapper
             #main
@@ -21,16 +20,25 @@ html
                         a(href="sample" class="logo")
                             strong KYELAB
                         ul(class="icons")
-                            li: a(href="#" class="icon fa-twitter")
-                                span(class="label") Twitter
-                            li: a(href="#" class="icon fa-facebook")
-                                span(class="label") Facebook
-                            li: a(href="#" class="icon fa-snapchat-ghost")
-                                span(class="label") Snapchat
-                            li: a(href="#" class="icon fa-instagram")
-                                span(class="label") Instagram
-                            li: a(href="#" class="icon fa-medium")
-                                span(class="label") Medium
+                            li
+                                a(href="#" class="icon fa-twitter")
+                                    span(class="label") Twitter
+                            li
+                                a(href="#" class="icon fa-facebook")
+                                  span(class="label") Facebook
+                            li
+                                a(href="#" class="icon fa-snapchat-ghost")
+                                    span(class="label") Snapchat
+                            li
+                                a(href="#" class="icon fa-instagram")
+                                    span(class="label") Instagram
+                            li
+                                a(href="#" class="icon fa-medium")
+                                    span(class="label") Medium
+                            if user
+                                li
+                                    a(href="/manage" class="icon fa-clipboard")
+                                        span(class="label") Manage
                     block content
 
             #sidebar
