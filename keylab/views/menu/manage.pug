@@ -9,9 +9,10 @@ block content
             div(class="4u 12u$(small) category")
                 .row
                     h3 카테고리 관리
-                    form(method="POST" id="submit_category")
+                    form(method="POST" action="/manage/cate" id="submit_category")
                         a(href="#" class="button special" id="save_cate") 저장
                         input(type="hidden" value="" name="list_category" id="list_category")
+                        input(type="hidden" value="" name="delete_list" id="delete_list")
                 .row
                     div(class="9u 12u$(small) cate_manage")
                         ul(class="alt maincate")
@@ -20,6 +21,7 @@ block content
                                     if !(category.subcategories.length)
                                         li(class="component")= category.name
                                     else
+                                        li(class="component")= category.name
                                         li(class="subcate")
                                             ul
                                                 for subcategory in category.subcategories

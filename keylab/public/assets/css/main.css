@@ -2648,7 +2648,7 @@
 
 				ul.alt li:first-child {
 					border-top: 0;
-					padding-top: 0;
+					/* padding-top: 0; */
 				}
 
 		ul.icons {
@@ -4205,8 +4205,10 @@
 		margin: 0;
 	}
 
-	.add_cate {
-		margin-bottom: 10px;
+	.add_cate ul {
+		margin: 0;
+		margin-top: 10px;
+		border-top: 3px dotted #eeeeee
 	}
 
 	#up_button a {

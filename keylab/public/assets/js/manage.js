@@ -3,12 +3,12 @@ $(document).ready(function() {
     /************* 카테고리 관리****************/
 
     // 카테고리를 클릭할 경우 -> 선택 상태로 변경
-    var activate = function() {
+    var activate_category = function() {
         $('.component.selected').removeClass('selected');
         $(this).addClass('selected');
     }
     // 각 카테고리에 클릭 이벤트 연결
-    $('.component').click(activate);
+    $('.component').click(activate_category);
 
 
 
@@ -45,8 +45,6 @@ $(document).ready(function() {
         }
     });
 
-
-
     // down 버튼을 누를 경우
     $('#down_button').click(function() {
         // selected 된 대상이 일반 카테고리인 경우
@@ -80,16 +78,44 @@ $(document).ready(function() {
         }
     });
 
-
-
     // 추가 버튼을 누른 경우
     $('#update_cate').click(function() {
         var name = $('.add_cate').val();
+        // 이름 입력이 안된 경우
+        if(!name) {
+            alert('카테고리 이름을 입력해주세요.');
+            return;
+        }
+        // 삭제 리스트에 추가하고자 하는 카테고리가 존재하는 경우
+        
+        // 첫 카테고리인 경우
+        if(!$('.component').length) {
+            var li = $('<li></li>').html(name).addClass('component').on('click', activate_category);
+            $('.maincate').html(li);
+            return;
+        }
+        // 카테고리 클릭이 안되어 있는 경우
+        if(!$('.selected').length) {
+            alert('타겟 카테고리를 클릭해주세요.');
+            return;
+        }
+        // 이름이 중복되는 경우
+        var duple = false;
+        $('.component').each(function(index, item) {
+            if($(item).text() === name) {
+                alert('이름을 중복사용할 수 없습니다.')
+                duple = true;
+            }
+        })
+        if(duple) {
+            return;
+        }
+
         // 서브 카테고리 체크 여부 (true: 서브 카테고리, false: selected된 카테고리와 동일 레벨의 카테고리로 추가)
         var is_sub = $('#is_sub').is(':checked');
 
         // 추가할 카테고리 생성
-        var li = $('<li></li>').html(name).addClass('component').on('click', activate);
+        var li = $('<li></li>').html(name).addClass('component').on('click', activate_category);
 
         // 서브 카테고리로 추가하는 경우
         if(is_sub) {
@@ -124,25 +150,86 @@ $(document).ready(function() {
     })
 
 
-
-    // 삭제 버튼을 누른 경우 => ajax로 처리( 카테고리 안에 게시물이 존재할 경우 삭제 불가 + 데이터베이스에서 한 번에 처리를 위한 비교가 힘듬.)
+    // 삭제 버튼을 누른 경우
     $('#del_button').click(function() {
         if(confirm('정말 해당 카테고리를 삭제하시겠습니까?')) {
-            // 해당 카테고리 삭제
-            // 서브카테고리가 존재하는 경우
-            if($('.selected').next().children().hasClass('subcate')) {
-                alert('서브카테고리가 존재하는 경우 삭제가 불가능합니다.');
-                return;
+            var del_list = [];
+            var name = $('.selected').text();
+            var type; // 카테고리 타입
+            // 서브 카테고리인 경우
+            if($('.selected').parent().parent().hasClass('subcate')) {
+                type = 'sub';
             }
-            // 서브카테고리를 삭제하는 경우
-            if($('.selected').parent().hasClass('subcate')) {
-                // 자신이 마지막인 경우
-                if($('.selected').parent().children().length == 1) {
-                    var li = $('.selected').parent().parent();
-                    li.remove();
+            else {
+                // 일반 카테고리인 경우
+                type = 'main';
+            }
+            // 해당 카테고리에 게시글이 있는가 확인
+            $.ajax({
+                url: '/manage/del',
+                type: 'get',
+                data: {
+                    name,
+                    type
+                },
+                success: function(data) {
+                    // 카테고리 내에 게시물이 존재하는 경우
+                    if(data) {
+                        alert('카테고리 내에 게시글이 존재하는 경우 삭제가 불가능합니다.');
+                        return;
+                    }
+                    else {
+                        // 서브 카테고리의 경우 삭제
+                        if(type === 'sub') {
+                            // 자신이 마지막 서브카테고리인 경우
+                            if($('.selected').parent().children().length == 1) {
+                                var li = $('.selected').parent().parent();
+                                li.remove();
+                            }
+                            else {
+                                $('.selected').remove();
+                            }
+                            del_list.push({
+                                type: type,
+                                name: $('.selected').text()
+                            })
+                        }
+                        // 일반 카테고리의 경우
+                        else {
+                            // 밑에 서브가 존재하는 경우
+                            if($('.selected').next().hasClass('subcate')) {
+                                alert('서브카테고리가 존재하는 경우 삭제가 불가능합니다.');
+                                return;
+                            }
+                            // 서브가 없는 경우 삭제
+                            else {
+                                $('.selected').remove();
+                                del_list.push({
+                                    type: type,
+                                    name: $('.selected').text()
+                                });
+                            }
+                        }
+                        $('#delete_list').val(JSON.stringify(del_list));
+                    }
                 }
-            }
-            $('.selected').remove();
+            })
+
+            // // 해당 카테고리 삭제
+            // // 서브카테고리가 존재하는 경우
+            // if($('.selected').next().children().hasClass('subcate')) {
+            //     alert('서브카테고리가 존재하는 경우 삭제가 불가능합니다.');
+            //     return;
+            // }
+            // // 서브카테고리를 삭제하는 경우
+            // if($('.selected').parent().hasClass('subcate')) {
+            //     // 자신이 마지막인 경우
+            //     if($('.selected').parent().children().length == 1) {
+            //         var li = $('.selected').parent().parent();
+            //         li.remove();
+            //     }
+            // }
+            // $('.selected').remove();
         }
     });
 
@@ -154,7 +241,7 @@ $(document).ready(function() {
 
         $('.component').each(function(index, item) {
             var type; // 카테고리 타입
-            var title_category = null; // 제목 카테고리
+            var title_category = null; // 부모 카테고리
             // 서브 카테고리인 경우
             if($(item).parent().parent().hasClass('subcate')) {
                 type = 'sub';
@@ -172,17 +259,17 @@ $(document).ready(function() {
             });
         });
         // input 태그에 삽입 후 submit
-        $('#list_category').val(list_category);
+        $('#list_category').val(JSON.stringify(list_category));
         $('#submit_category').submit();
     });
 
     /************* 즐겨찾기 관리 ****************/
 
     // 카테고리를 클릭할 경우 -> 선택 상태로 변경
-    var activate = function() {
+    var activate_bookmark = function() {
         $('.bookmark_list li.selected').removeClass('selected');
         $(this).addClass('selected');
     }
     // 각 카테고리에 클릭 이벤트 연결
-    $('.bookmark_list li').click(activate);
+    $('.bookmark_list li').click(activate_bookmark);
 });
