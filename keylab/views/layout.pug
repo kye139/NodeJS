@@ -61,13 +61,13 @@ html
                                             for subcategory in category.subcategories
                                                 li
                                                     a= subcategory.name
-                    nav(id="menu")
+                    nav(id="menu" class="bookmark_menu")
                         header(class="major")
                             h2 BookMark
                         ul
                             for bookmark in bookmarks
                                 li
-                                    a(href="#{bookmark.URL}")= bookmark.title
+                                    a(href=bookmark.URL)= bookmark.title
                     section
                         header(class="major")
                             h2 Get in touch

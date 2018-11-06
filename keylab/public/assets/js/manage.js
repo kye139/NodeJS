@@ -90,7 +90,10 @@ $(document).ready(function() {
         // 삭제 리스트에 추가하고자 하는 카테고리가 존재하는 경우
         var del_list = $('#delete_list').val();
         if(del_list && del_list.indexOf(name) !== -1) {
+            del_list = JSON.parse(del_list);
             del_list.splice(del_list.indexOf(name), 1);
+            del_list = JSON.stringify(del_list);
+            $('#delete_list').val(del_list);
         }
         
         // 첫 카테고리인 경우
@@ -159,15 +162,25 @@ $(document).ready(function() {
     $('#del_button').click(function() {
         if(confirm('정말 해당 카테고리를 삭제하시겠습니까?')) {
             var del_list = [];
+
+            // delete_list안에 내용이 있을 경우 JSON으로 변경
+            if($('#delete_list').val()) {
+                del_list = JSON.parse($('#delete_list').val());
+            }
+            // 안에 아무 내용이 없을 경우, 문자열로 인식되기 때문에 객체로 생성
+            else {
+                del_list = [];
+            }
+
             var name = $('.selected').text();
-            var type; // 카테고리 타입
+            var types; // 카테고리 타입
             // 서브 카테고리인 경우
             if($('.selected').parent().parent().hasClass('subcate')) {
-                type = 'sub';
+                types = 'sub';
             }
             else {
                 // 일반 카테고리인 경우
-                type = 'main';
+                types = 'main';
             }
             // 해당 카테고리에 게시글이 있는가 확인
             $.ajax({
@@ -175,7 +188,7 @@ $(document).ready(function() {
                 type: 'get',
                 data: {
                     name,
-                    type
+                    types
                 },
                 success: function(data) {
                     // 카테고리 내에 게시물이 존재하는 경우
@@ -185,7 +198,7 @@ $(document).ready(function() {
                     }
                     else {
                         // 서브 카테고리의 경우 삭제
-                        if(type === 'sub') {
+                        if(types === 'sub') {
                             // 자신이 마지막 서브카테고리인 경우
                             if($('.selected').parent().children().length == 1) {
                                 var li = $('.selected').parent().parent();
@@ -195,8 +208,8 @@ $(document).ready(function() {
                                 $('.selected').remove();
                             }
                             del_list.push({
-                                type: type,
-                                name: $('.selected').text()
+                                type: types,
+                                name
                             })
                         }
                         // 일반 카테고리의 경우
@@ -210,8 +223,8 @@ $(document).ready(function() {
                             else {
                                 $('.selected').remove();
                                 del_list.push({
-                                    type: type,
-                                    name: $('.selected').text()
+                                    type: types,
+                                    name
                                 });
                             }
                         }
@@ -270,11 +283,45 @@ $(document).ready(function() {
 
     /************* 즐겨찾기 관리 ****************/
 
-    // 카테고리를 클릭할 경우 -> 선택 상태로 변경
+    // 즐겨찾기 링크를 클릭할 경우 -> 선택 상태로 변경
     var activate_bookmark = function() {
         $('.bookmark_list li.selected').removeClass('selected');
         $(this).addClass('selected');
     }
-    // 각 카테고리에 클릭 이벤트 연결
+    // 각 링크에 클릭 이벤트 연결
     $('.bookmark_list li').click(activate_bookmark);
+
+    // 추가 버튼을 누른 경우
+    $('#update_bookmark').click(function() {
+        var name = $('.add_bookmark').val();
+        var url = $('.bookmark_url').val();
+
+        // input 태그가 비어있는 경우
+        if(!name || !url) {
+            alert('링크 이름과 URL 항목을 작성해주세요.');
+            return;
+        }
+
+        // 링크 추가를 ajax의 형태로 수행
+        $.ajax({
+            url: '/manage/bookmark',
+            type: 'post',
+            data: {
+                bookmark_name: name,
+                bookmark_url: url
+            },
+            success: function(data) {
+                // 링크 추가에 실패한 경우
+                if(!data.isSuccess) {
+                    alert(data.errorMessage);
+                    return;
+                }
+                // 링크 추가에 성공한 경우
+                else {
+                    $('.bookmark_list').append($('<li></li>').html($('<a></a>').attr('href', url).addClass('link').html(name)).click(activate_bookmark));
+                    $('.bookmark_menu ul').append($('<li></li>').html($('<a></a>').attr('href', url).html(name)));
+                }
+            }
+        })
+    })
 });

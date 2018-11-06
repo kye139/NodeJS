@@ -4205,10 +4205,8 @@
 		margin: 0;
 	}
 
-	.add_cate ul {
-		margin: 0;
-		margin-top: 10px;
-		border-top: 3px dotted #eeeeee
+	.add_cate {
+		margin-bottom: 10px;
 	}
 
 	#up_button a {

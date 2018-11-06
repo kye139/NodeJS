@@ -54,8 +54,9 @@ block content
                             li
                                 a(href=bookmark.URL class="link")= bookmark.title
                 h4 즐겨찾기 추가
-                input(type="text" class="add_bookmark" name="add_bookmark" id="add_bookmark" value="" placeholder="즐겨찾기 이름")
-                input(type="url" class="bookmark_url" name="bookmark_url" value="" placeholder="URL")
+                form(method="POST" action="/manage/bookmark" id="d")
+                    input(type="text" class="add_bookmark" name="add_bookmark" id="add_bookmark" value="" placeholder="즐겨찾기 이름")
+                    input(type="url" class="bookmark_url" name="bookmark_url" value="" placeholder="URL")
                 a(class="button special" id="update_bookmark") 추가
                 a(class="button special" id="del_bookmark") 삭제
 

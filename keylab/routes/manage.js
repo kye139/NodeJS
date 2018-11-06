@@ -33,8 +33,25 @@ router.get('/', isLoggedIn, async (req, res, next) => {
 
 router.post('/cate', isLoggedIn, async (req, res, next) => {
     try {
-        const { list_category } = req.body;
+        const { list_category, delete_list } = req.body;
+        const del = JSON.parse(delete_list);
         const list = JSON.parse(list_category);
+
+        for (const i in del) {
+            const name = del[i].name;
+            const type = del[i].type;
+
+            if(type === 'main') {
+                const result = await Maincategory.destroy({
+                    where: { name }
+                })
+            }
+            else {
+                const result = await Subcategory.destroy({
+                    where: { name }
+                })
+            }
+        }
 
         for (const i in list) {
             const name = list[i].name;
@@ -47,7 +64,6 @@ router.post('/cate', isLoggedIn, async (req, res, next) => {
                 });
                 // 카테고리가 기존에 존재했던 경우
                 if(result) {
-                    console.log( i + 'main : update')
                     const upd = await Maincategory.update({
                         order: parseInt(i) + 1
                     }, {
@@ -56,7 +72,6 @@ router.post('/cate', isLoggedIn, async (req, res, next) => {
                 }
                 // 카테고리가 새로운 카테고리인 경우
                 else {
-                    console.log( i + 'main : create')
                     const upd = await Maincategory.create({
                         name,
                         order: parseInt(i) + 1
@@ -70,7 +85,6 @@ router.post('/cate', isLoggedIn, async (req, res, next) => {
                 });
                 // 카테고리가 기존에 존재했던 경우
                 if(result) {
-                    console.log( i + 'sub : update')
                     const upd = await Subcategory.update({
                         order: parseInt(i) + 1
                     }, {
@@ -83,7 +97,6 @@ router.post('/cate', isLoggedIn, async (req, res, next) => {
                         where: { name: parent }
                     });
                     if (parent_id){
-                        console.log( i + 'sub : create')
                         const upd = await Subcategory.create({
                             name,
                             order: parseInt(i) + 1,
@@ -104,7 +117,6 @@ router.post('/cate', isLoggedIn, async (req, res, next) => {
 router.get('/del', isLoggedIn, async (req, res, next) => {
     try {
         const { name, type } = req.query;
-        console.log(name + ":" + type);
         let result;
         if(type === 'main') {
             result = await Maincategory.find({
@@ -123,7 +135,6 @@ router.get('/del', isLoggedIn, async (req, res, next) => {
             });
         }
 
-        console.log(result);
         if(!result || result.contents.length == 0) {
             res.status(200).json(0)
         }
@@ -135,6 +146,37 @@ router.get('/del', isLoggedIn, async (req, res, next) => {
         console.error(error);
         next(error);
     }
-})
+});
+
+router.post('/bookmark', isLoggedIn, async (req, res, next) => {
+    try {
+        const { bookmark_name, bookmark_url } = req.body;
+
+        const result = await Link.find({
+            where: { title: bookmark_name }
+        });
+
+        if(result) {
+            return res.json({
+                isSuccess: false,
+                errorMessage: '중복된 이름을 사용할 수 없습니다.'
+            });
+        };
+
+        await Link.create({
+            title: bookmark_name,
+            URL: bookmark_url
+        });
+
+        return res.json({
+            isSuccess: true
+        });
+
+    }
+    catch(error) {
+        console.error(error);
+        next(error);
+    }
+});
 
 module.exports = router;
