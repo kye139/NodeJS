@@ -123,11 +123,12 @@ router.get('/del', isLoggedIn, async (req, res, next) => {
             });
         }
 
-        if(result.contents.length) {
-            res.status(200).json(1)
+        console.log(result);
+        if(!result || result.contents.length == 0) {
+            res.status(200).json(0)
         }
         else {
-            res.status(200).json(0)
+            res.status(200).json(1)
         }
     }
     catch(error) {

@@ -78,6 +78,7 @@ $(document).ready(function() {
         }
     });
 
+
     // 추가 버튼을 누른 경우
     $('#update_cate').click(function() {
         var name = $('.add_cate').val();
@@ -87,6 +88,10 @@ $(document).ready(function() {
             return;
         }
         // 삭제 리스트에 추가하고자 하는 카테고리가 존재하는 경우
+        var del_list = $('#delete_list').val();
+        if(del_list && del_list.indexOf(name) !== -1) {
+            del_list.splice(del_list.indexOf(name), 1);
+        }
         
         // 첫 카테고리인 경우
         if(!$('.component').length) {

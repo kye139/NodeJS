@@ -16,7 +16,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
     try {
         const exUser = await User.find({ where: { user_id: admin_id }});
         if(exUser) {
-            return res.redirect('/join');
+            return res.redirect('/');
         }
 
         const hash = await bcrypt.hash(admin_password, 12);

@@ -6,7 +6,6 @@ html
         meta(name='viewport' content="width=device-width, initial-scale=1, user-scalable=no")
         link(rel="stylesheet" href="assets/css/main.css")
         script(src="assets/js/jquery.min.js")
-        script(src="/assets/js/login.js")
     body
         #wrapper
             #main
@@ -41,3 +40,9 @@ html
                             input(type="password" name="admin_password" id="admin_password" value="" placeholder="비밀번호")
                 p= loginError
                 a(class="button small login") 로그인
+    script.
+        $('document').ready(function() {
+            $('.login').click(function() {
+                $('#login_form').submit();
+            });
+        });
