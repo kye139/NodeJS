@@ -11,7 +11,21 @@ html
         script(src="/assets/js/skel.min.js")
         script(src="/assets/js/util.js")
         script(src="/assets/js/main.js")
+        script.
+            $('document').ready(function() {
+                $('.category_menu a').click(function() {
+                    var types, name = $(this).text();
 
+                    if($(this).hasClass('main')) {
+                        types = 'main'
+                    }
+                    else {
+                        types = 'sub'
+                    }
+
+                    location.href='/post/list?name=' + name + '&type=' + types;
+                })
+            })
     body
         #wrapper
             #main
@@ -37,7 +51,7 @@ html
                                     span(class="label") Medium
                             if user
                                 li
-                                    a(href="/manage" class="icon fa-clipboard")
+                                    a(href="/manage" class="icon fa-lightbulb-o")
                                         span(class="label") Manage
                     block content
 
@@ -46,21 +60,21 @@ html
                     section(id="search" class="alt")
                         form(method="post" action="sample")
                             input(type="text" name="query" id="query" placeholder="Search")
-                    nav(id="menu")
+                    nav(id="menu" class="category_menu")
                         header(class="major")
                             h2 Menu                        
                         ul
                             for category in categories
                                 if !(category.subcategories.length)
                                     li
-                                        a= category.name
+                                        a(href="/post/#{category.id}/list?num=1" class="main")= category.name
                                 else
                                     li
                                         span(class="opener") #{category.name}
                                         ul
                                             for subcategory in category.subcategories
                                                 li
-                                                    a= subcategory.name
+                                                    a(href="/post/#{category.id}/list?num=1" class="sub")= subcategory.name
                     nav(id="menu" class="bookmark_menu")
                         header(class="major")
                             h2 BookMark

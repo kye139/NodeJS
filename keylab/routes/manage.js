@@ -34,24 +34,26 @@ router.get('/', isLoggedIn, async (req, res, next) => {
 router.post('/cate', isLoggedIn, async (req, res, next) => {
     try {
         const { list_category, delete_list } = req.body;
-        const del = JSON.parse(delete_list);
-        const list = JSON.parse(list_category);
+        if(delete_list) {
+            const del = JSON.parse(delete_list);
 
-        for (const i in del) {
-            const name = del[i].name;
-            const type = del[i].type;
-
-            if(type === 'main') {
-                const result = await Maincategory.destroy({
-                    where: { name }
-                })
-            }
-            else {
-                const result = await Subcategory.destroy({
-                    where: { name }
-                })
+            for (const i in del) {
+                const name = del[i].name;
+                const type = del[i].type;
+    
+                if(type === 'main') {
+                    const result = await Maincategory.destroy({
+                        where: { name }
+                    })
+                }
+                else {
+                    const result = await Subcategory.destroy({
+                        where: { name }
+                    })
+                }
             }
         }
+        const list = JSON.parse(list_category);
 
         for (const i in list) {
             const name = list[i].name;
@@ -178,5 +180,36 @@ router.post('/bookmark', isLoggedIn, async (req, res, next) => {
         next(error);
     }
 });
+
+router.delete('/bookmark', isLoggedIn, async (req, res, next) => {
+    try {
+        const { bookmark_name } = req.body;
+        console.log('type - bookmark_name : ' + typeof(bookmark_name));
+        console.log('bookmark_name : ' + bookmark_name);
+
+        const result = Link.find({
+            where: { title: bookmark_name }
+        });
+
+        if(!result) {
+            return res.json({
+                isSuccess: false,
+                errorMessage: '잘못된 접근'
+            });
+        }
+        
+        const del = Link.destroy({
+            where: { title: bookmark_name }
+        });
+
+        res.json({
+            isSuccess: true
+        });
+    }
+    catch(error) {
+        console.error(error);
+        next(error);
+    }
+})
 
 module.exports = router;

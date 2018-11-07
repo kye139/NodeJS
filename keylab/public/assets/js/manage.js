@@ -155,6 +155,7 @@ $(document).ready(function() {
                 $('.selected').after(li);
             }
         }
+        $('.add_cate').val('');
     })
 
 
@@ -320,6 +321,51 @@ $(document).ready(function() {
                 else {
                     $('.bookmark_list').append($('<li></li>').html($('<a></a>').attr('href', url).addClass('link').html(name)).click(activate_bookmark));
                     $('.bookmark_menu ul').append($('<li></li>').html($('<a></a>').attr('href', url).html(name)));
+                    $('.add_bookmark').val('');
+                    $('.bookmark_url').val('');
+                }
+            }
+        })
+    });
+
+
+    // 삭제 버튼을 누른 경우
+    $('#del_bookmark').click(function() {
+        if(!$('.bookmark_list .selected')) {
+            alert('삭제 대상을 선택해주세요.');
+            return;
+        }
+
+        var sel = $('.bookmark_list .selected');
+
+        console.log('type - sel : ' + typeof(sel));
+        console.log('sel : ' + JSON.stringify(sel));
+        console.log('sel.name : ' + sel.text());
+
+        // 링크 추가를 ajax의 형태로 수행
+        $.ajax({
+            url: '/manage/bookmark',
+            type: 'delete',
+            data: {
+                bookmark_name: sel.text()
+            },
+            success: function(data) {
+                // 링크 추가에 실패한 경우
+                if(!data.isSuccess) {
+                    alert(data.errorMessage);
+                    return;
+                }
+                // 링크 추가에 성공한 경우
+                else {
+                    console.log('성공?!')
+                    $('.bookmark_menu ul li').each(function(index, item) {
+                        if($(item).text() === sel.text()) {
+                            $(item).remove();
+                        }
+                    })
+                    $(sel).remove();
+                    // $('.bookmark_list').append($('<li></li>').html($('<a></a>').attr('href', url).addClass('link').html(name)).click(activate_bookmark));
+                    // $('.bookmark_menu ul').append($('<li></li>').html($('<a></a>').attr('href', url).html(name)));
                 }
             }
         })

@@ -11,6 +11,7 @@ const indexRouter = require('./routes/index');
 const NoticeRouter = require('./routes/notice');
 const loginRouter = require('./routes/admin_login');
 const manageRouter = require('./routes/manage');
+const postRouter = require('./routes/post');
 
 const { sequelize } = require('./models');
 
@@ -46,6 +47,7 @@ app.use('/', indexRouter);
 app.use('/notice', NoticeRouter);
 app.use('/admin_login', loginRouter);
 app.use('/manage', manageRouter);
+app.use('/post', postRouter);
 
 app.use((req, res, next) => {
     const err = new Error('Not Found');
