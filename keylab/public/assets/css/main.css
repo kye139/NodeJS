@@ -3017,6 +3017,7 @@
 			padding: 0 1.25em;
 			height: 2.5em;
 			line-height: 2.5em;
+			margin-right: 5px;
 		}
 
 		input[type="submit"].big,
@@ -4122,11 +4123,13 @@
 
 	.comt hr {
 		border-style: dotted;
+		margin-bottom: 10px;
 	}
 
 	.comt blockquote {
 		border: none;
 		font-style: normal;
+		margin-bottom: 0;
 	}
 
 	.edit_del {
@@ -4138,19 +4141,19 @@
 		color: black;
 	}
 
-	#reply .uniform, #edit .uniform, #delete .uniform {
+	.reply .uniform, .edit .uniform, .delete .uniform {
 		display: none;
 	}
 
-	#reply .selected, #edit .selected, #delete .selected {
+	.reply .selected, .edit .selected, .delete .selected {
 		display: block;
 	}
 
-	#reply .uniform {
+	.reply .uniform {
 		margin-top: 10px;
 	}
 
-	#delete div {
+	.delete div {
 		width: 300px;
 		text-align: center;
 		margin: auto;
@@ -4159,6 +4162,10 @@
 	.error p {
 		color: red;
 		font-weight: bold;
+	}
+
+	.content_title {
+		font-size: 2.5em;
 	}
 
 	/** notice.html **/
@@ -4183,14 +4190,19 @@
 	}
 
 	.list_component .small_cate_name {
-		font-size: 11px;
+		font-size: 13px;
 		padding-right: 15px;
 		border-right: 1.5px solid rgb(182, 173, 173)
 	}
 
 	.list_component .write_time {
-		font-size: 11px;
+		font-size: 13px;
 		padding-left: 15px;
+	}
+
+	.pagination .page:hover {
+		background-color: #eeeeee;
+		cursor: pointer;
 	}
 
 	/** write_notice.html **/

@@ -1,57 +1,14 @@
 extends ../layout
 
 block content
+    script(src="/assets/js/post_list.js")
     section
-        header(class="major")
-            h2= category_name
-                span (#{category_all_length})
-        for content in contents
-            div(class="box list_component")
-                h2(id="content")= content.title
-                p= summary
-                .about_post
-                    span(class="small_cate_name")= category_name
+        header(class="major category_header")
+            h2(class=category_type)= category_name
+                span(class="contents_num") 
+                input(type="hidden" value=category_name class="category_name")
+        div(class='post_list')
         hr
         .page
             ul(class="pagination")
-                li
-                    - if(number == 1)
-                        span(class="button disabled") 첫페이지
-                    - else
-                        span(class="button") 첫페이지
-
-                - var page_count = Math.ceil(parseFloat(content_count) / 8.0);
-                - if (page_count > 7)
-                    - if (parseInt(number) <= 4)
-                        - for(var i=1; i<parseInt(number); i++)
-                            li
-                                a(href="#" class="page") #{i}
-                        li
-                            a(href="#" class="page active") #{number}
-                        - for(var i=parseInt(number)+1; i<8; i++)
-                            li
-                                a(href="#" class="page") #{i}
-                    - else
-                        - for(var i=parseInt(number) - 3; i<parseInt(number); i++)
-                            li
-                                a(href="#" class="page") #{i}
-                        li
-                            a(href="#" class="page active") #{number}
-                        -for(var i=parseInt(number)+1; i<parseInt(number)+4; i++)
-                            li
-                                a(href="#" class="page") #{i}
-                - else
-                    - for(var i=1; i<parseInt(number); i++)
-                        li
-                            a(href="#" class="page") #{i}
-                    li
-                        a(href="#" class="page active") #{number}
-                    - for(i=parseInt(number) + 1; i<=page_count; i++)
-                        li
-                            a(href="#" class="page") #{i}
-                - if (parseInt(number) == page_count)
-                    li 
-                        a(href="#" class="button disabled") 끝페이지
-                - else
-                    li
-                        a(href="#" class="button") 끝페이지
+        .input_form

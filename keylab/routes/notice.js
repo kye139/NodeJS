@@ -9,11 +9,13 @@ router.get('/list/:num', async (req, res, next) => {
     try {
         const [ categories, bookmarks, notices ] = await Promise.all([
             Maincategory.findAll({
-                order: [['order']],
                 include: {
                     model: Subcategory,
-                    order: [['order']]
-                }
+                },
+                order: [
+                    ['order', 'asc'],
+                    [Subcategory, 'order', 'asc']
+                ]
             }),
             Link.findAll(),
             Notice.findAll({
@@ -42,11 +44,13 @@ router.get('/write', isLoggedIn, async (req, res, next) => {
     try {
         const [ categories, bookmarks ] = await Promise.all([
             Maincategory.findAll({
-                order: [['order']],
                 include: {
                     model: Subcategory,
-                    order: [['order']]
-                }
+                },
+                order: [
+                    ['order', 'asc'],
+                    [Subcategory, 'order', 'asc']
+                ]
             }),
             Link.findAll()
         ]);
@@ -66,11 +70,13 @@ router.get('/post/:id', async (req, res, next) => {
     try {
         const [ categories, bookmarks, notice ] = await Promise.all([
             Maincategory.findAll({
-                order: [['order']],
                 include: {
                     model: Subcategory,
-                    order: [['order']]
-                }
+                },
+                order: [
+                    ['order', 'asc'],
+                    [Subcategory, 'order', 'asc']
+                ]
             }),
             Link.findAll(),
             Notice.find({
@@ -110,11 +116,13 @@ router.get('/edit/:id', isLoggedIn, async (req, res, next) => {
     try {
         const [ categories, bookmarks, notice ] = await Promise.all([
             Maincategory.findAll({
-                order: [['order']],
                 include: {
                     model: Subcategory,
-                    order: [['order']]
-                }
+                },
+                order: [
+                    ['order', 'asc'],
+                    [Subcategory, 'order', 'asc']
+                ]
             }),
             Link.findAll(),
             Notice.find({

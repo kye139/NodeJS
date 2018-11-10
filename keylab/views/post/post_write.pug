@@ -1,0 +1,57 @@
+extends ../layout
+
+block content
+    script(src="/editor/ckeditor.js")
+    script.
+        $(document).ready(function() {
+            // 게시글 작성 버튼을 누른 경우
+            $('#posting').click(function() {
+                // 카테고리 지정이 안된 경우
+                if(!$('#demo-category > option:selected').val()) {
+                    alert('정확한 카테고리를 지정해주세요. 서브 카테고리의 타이틀은 지정 불가능 합니다.');
+                    return;
+                }
+                if(!$('#post_title').val()) {
+                    alert('제목을 입력해주세요.');
+                    return;
+                }
+                var types = $('#demo-category > option:selected').attr('class')
+                $('.type').val(types);
+                $('#post_submit').submit();
+            });
+        })
+    section
+        .row
+            div(class="6u 12u$(small)")
+                h4 카테고리 지정
+        form(id="post_submit" method="post" action="/post/posting")
+            .row
+                div(class="6u 12u$(small)")
+                    .select-wrapper
+                        select(name="category_name" id="demo-category")
+                            option(value="") - Category -
+                            if categories
+                                for category in categories
+                                    if !(category.subcategories.length)
+                                        option(value=category.name class="main")= category.name
+                                    else
+                                        option(value="")= category.name
+                                        for subcategory in category.subcategories
+                                            option(value=subcategory.name class="sub")  - #{subcategory.name}
+                    input(type="hidden" value="" class="type" name="type")
+            hr
+            div
+                input(type="text" name="title" id="post_title" value="" placeholder="제목" required)
+            textarea(name="editor1" id="editor1" rows="10" cols="80") 내용을 입력해주세요.
+            script.
+                // Replace the <textarea id="editor1"> with a CKEditor
+                // instance, using default configuration.
+                CKEDITOR.replace( 'editor1', {
+                    filebrowserUploadUrl: '/post/upload',
+                    extraPlugins : 'image2',
+                    height: 800
+                });
+            hr
+            input(type="text" name="tag_list" id="tag_list" value="" placeholder="태그 입력 (공백 구분)")
+            hr
+            a(href="#" class="button special" id="posting") 게시글 작성

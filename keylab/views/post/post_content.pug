@@ -1,0 +1,167 @@
+extends ../layout
+
+block content
+    script(src="/assets/js/content.js")
+
+    section
+        header
+            h1(class='content_title')= content.title
+
+        .tag
+            span
+                for tag in tags
+                    a(href="#" class="button verysmall")= tag.title
+        hr
+        div(class='post_content' id=content.id) !{post}
+            
+
+        if user
+            .content_btn
+                a(href="#" class="button verysmall")
+                    i(class="fas fa-edit")
+                    | 수정
+                a(href="#" class="button verysmall")
+                    i(class="fas fa-eraser")
+                    | 삭제
+        hr
+
+        //- div(class="box comt")
+        //-     dl
+        //-         for comment in comments
+        //-             if comment.commentType === 'sub'
+        //-                 blockquote
+        //-                     div(id=comment.id class="comment_box")
+        //-                         dt
+        //-                             h3= comment.name + ' '
+        //-                                 i(class="fas fa-reply")
+        //-                         dd
+        //-                             p= comment.contents
+        //-                         .comment_btn
+        //-                             a(class="button verysmall reply_btn")
+        //-                                 i(class="fas fa-comment")
+        //-                                 | 답글
+        //-                             a(class="button verysmall edit_btn")
+        //-                                 i(class="fas fa-edit")
+        //-                                 | 수정
+        //-                             a(class="button verysmall delete_btn")
+        //-                                 i(class="fas fa-eraser")
+        //-                                 | 삭제
+        //-                         form(method="post" action="/post/sub_comment" class="reply")
+        //-                             input(type="hidden" name="content_id" value=content.id)
+        //-                             input(type="hidden" name="category_title" value=category_title)
+        //-                             div(class="error reply_error")
+        //-                             div(class="row uniform")
+        //-                                 div(class="6u 12u$(xsmall)")
+        //-                                     input(type="text" name="name" class="comment_name" value="" placeholder="이름" required)
+        //-                                 div(class="6u 12u$(xsmall)")
+        //-                                     input(type="password" name="password" class="comment_password" value="" placeholder="비밀번호" required)
+                                        
+        //-                                 div(class="12u$")
+        //-                                     textarea(name="message" class="comment_message" placeholder="Enter your message" rows="6" required)
+
+        //-                                 div(class="12u$")
+        //-                                     ul(class="actions")
+        //-                                         li
+        //-                                             input(type="button" value="댓글 등록" class="special")
+        //-                         form(method="post" action="#" class="edit")
+        //-                             input(type="hidden" name="content_id" value=content.id)
+        //-                             input(type="hidden" name="category_title" value=category_title)
+        //-                             div(class="error edit_error")
+        //-                             div(class="row uniform")
+        //-                                 div(class="4u$ 12u$(xsmall)")
+        //-                                     input(type="password" name="password" class="comment_password" value="" placeholder="비밀번호" required)
+        //-                                 div(class="12u$")
+        //-                                     textarea(name="message" class="comment_message" placeholder="Enter your message" rows="6" required)
+        //-                                 div(class="12u$")
+        //-                                     ul(class="actions")
+        //-                                         li
+        //-                                             input(type="submit" value="댓글 수정" class="special")
+        //-                         form(method="post" action="#" class="delete")
+        //-                             input(type="hidden" name="content_id" value=content.id)
+        //-                             input(type="hidden" name="category_title" value=category_title)
+        //-                             div(class="error delete_error")
+        //-                             div(class="row uniform")
+        //-                                 div(class="4u$ 12u$(xsmall)")
+        //-                                     input(type="password" name="password" class="comment_password" value="" placeholder="비밀번호" required)
+        //-                                 div(class="12u$")
+        //-                                     ul(class="actions")
+        //-                                         li
+        //-                                             input(type="submit" value="댓글 삭제" class="special")
+        //-                     hr
+        //-             else
+        //-                 div(id=comment.id class="comment_box")
+        //-                     dt
+        //-                         h3= comment.name
+        //-                     dd
+        //-                         p= comment.contents
+        //-                     .comment_btn
+        //-                         a(class="button verysmall reply_btn")
+        //-                             i(class="fas fa-comment")
+        //-                             | 답글
+        //-                         a(class="button verysmall edit_btn")
+        //-                             i(class="fas fa-edit")
+        //-                             | 수정
+        //-                         a(class="button verysmall delete_btn")
+        //-                             i(class="fas fa-eraser")
+        //-                             | 삭제
+        //-                     form(method="post" action="/post/sub_comment" class="reply")
+        //-                         input(type="hidden" name="content_id" value=content.id)
+        //-                         input(type="hidden" name="category_title" value=category_title)
+        //-                         div(class="error reply_error")
+        //-                         div(class="row uniform")
+        //-                             div(class="6u 12u$(xsmall)")
+        //-                                 input(type="text" name="name" class="comment_name" value="" placeholder="이름" required)
+        //-                             div(class="6u 12u$(xsmall)")
+        //-                                 input(type="password" name="password" class="comment_password" value="" placeholder="비밀번호" required)
+                                    
+        //-                             div(class="12u$")
+        //-                                 textarea(name="message" class="comment_message" placeholder="Enter your message" rows="6" required)
+
+        //-                             div(class="12u$")
+        //-                                 ul(class="actions")
+        //-                                     li
+        //-                                         input(type="button" value="댓글 등록" class="special")
+        //-                     form(method="post" action="#" class="edit")
+        //-                         input(type="hidden" name="content_id" value=content.id)
+        //-                         input(type="hidden" name="category_title" value=category_title)
+        //-                         div(class="error edit_error")
+        //-                         div(class="row uniform")
+        //-                             div(class="4u$ 12u$(xsmall)")
+        //-                                 input(type="password" name="password" class="comment_password" value="" placeholder="비밀번호" required)
+        //-                             div(class="12u$")
+        //-                                 textarea(name="message" class="comment_message" placeholder="Enter your message" rows="6" required)
+        //-                             div(class="12u$")
+        //-                                 ul(class="actions")
+        //-                                     li
+        //-                                         input(type="submit" value="댓글 수정" class="special")
+        //-                     form(method="post" action="#" class="delete")
+        //-                         input(type="hidden" name="content_id" value=content.id)
+        //-                         input(type="hidden" name="category_title" value=category_title)
+        //-                         div(class="error delete_error")
+        //-                         div(class="row uniform")
+        //-                             div(class="4u$ 12u$(xsmall)")
+        //-                                 input(type="password" name="password" class="comment_password" value="" placeholder="비밀번호" required)
+        //-                             div(class="12u$")
+        //-                                 ul(class="actions")
+        //-                                     li
+        //-                                         input(type="submit" value="댓글 삭제" class="special")
+        //-                 hr
+                        
+        hr
+
+        form(method="post" action="/post/comment")
+            input(type="hidden" name="content_id" value=content.id)
+            input(type="hidden" name="category_title" value=category_title)
+            div(class="row uniform")
+                div(class="6u 12u$(xsmall)")
+                    input(type="text" name="name" id="comment_name" value="" placeholder="아이디")
+                div(class="6u 12u$(xsmall)")
+                    input(type="password" name="password" id="comment_password" value="" placeholder="비밀번호")
+                
+                div(class="12u$")
+                    textarea(name="message" id="comment_message" placeholder="Enter your message" rows="6")
+                
+                div(class="12u$")
+                    ul(class="actions")
+                        li
+                            input(type="submit" value="댓글 등록" class="special")

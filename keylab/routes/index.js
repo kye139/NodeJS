@@ -6,11 +6,13 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     try {
         const categories = await Maincategory.findAll({        
-            order: [['order']],
             include: {
                 model: Subcategory,
-                order: [['order']]
-            }
+            },
+            order: [
+                ['order', 'asc'],
+                [Subcategory, 'order', 'asc']
+            ]
         });
         const bookmarks  = await Link.findAll();
 

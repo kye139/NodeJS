@@ -67,14 +67,14 @@ html
                             for category in categories
                                 if !(category.subcategories.length)
                                     li
-                                        a(href="/post/#{category.id}/list?num=1" class="main")= category.name
+                                        a(class="main")= category.name
                                 else
                                     li
                                         span(class="opener") #{category.name}
                                         ul
                                             for subcategory in category.subcategories
                                                 li
-                                                    a(href="/post/#{category.id}/list?num=1" class="sub")= subcategory.name
+                                                    a(class="sub")= subcategory.name
                     nav(id="menu" class="bookmark_menu")
                         header(class="major")
                             h2 BookMark
