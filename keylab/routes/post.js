@@ -4,7 +4,7 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 
-const { Maincategory, Subcategory, Link, Content, Tag, Comment } = require('../models');
+const { Maincategory, Subcategory, Link, Content, Tag, Comment, sequelize } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middleware')
 
 const router = express.Router();
@@ -337,7 +337,11 @@ router.post('/editing', isLoggedIn, async (req, res, next) => {
                             });
                         }
                         else {
-                            const del = Tag.sequelize.query('DELETE FROM "kyelab"."tags" WHERE ')
+                            sequelize.query('DELETE FROM contenttag WHERE contentId=? and tagId=?', { 
+                                replacements: [ id, db_tag.id ]
+                            }).then(aa => {
+                                    console.log(aa);
+                                });      
                         }
                     }
                 }
@@ -381,6 +385,14 @@ router.get('/content', async (req, res, next) => {
         const content_path = content.contents;
 
         const post = fs.readFileSync(content_path);
+
+        // const img = post.match(/<img(.)*\/>/gi);
+        const img = post.toString().match(/height="\d+"/gi);
+        let height = 0;
+
+        for (const i in img) {
+            console.log('aaa' + img[i]);
+        }
 
         const tags = await content.getTags();
 
