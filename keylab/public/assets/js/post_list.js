@@ -91,6 +91,7 @@ var page_click = function(page_num) {
                 var form = $('<form></form>').attr('method', 'get').attr('action', '/post/content');
                 $('<input></input>').attr('name', 'content_id').attr('type', 'hidden').val($(this).children().filter('h2').attr('class')).appendTo(form);
                 $('<input></input>').attr('name', 'category_title').attr('type', 'hidden').val($('.category_header h2').attr('class')).appendTo(form);
+                $('<input></input>').attr('name', 'category_name').attr('type', 'hidden').val($('.category_header h2').text()).appendTo(form);
                 $('.input_form').append(form);
                 form.submit();
             });

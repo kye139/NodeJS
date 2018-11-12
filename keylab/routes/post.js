@@ -22,11 +22,13 @@ const upload = multer({
     limits: { filesize: 5 * 1024 * 1024 }
 });
 
+// 포스트 목록의 레이아웃 페이지 요청 - 
 router.get('/list', async (req, res, next) => {
     try {
-        const { name, type } = req.query;
+        const { name, type } = req.query; // name : 카테고리의 이름, type : 카테고리의 타입
 
-        const [ categories, bookmarks, contents ] = await Promise.all([
+        // 레이아웃 설정을 위한 Promise
+        const [ categories, bookmarks ] = await Promise.all([
             Maincategory.findAll({
                 include: {
                     model: Subcategory,
@@ -44,8 +46,7 @@ router.get('/list', async (req, res, next) => {
             categories,
             bookmarks,
             category_name: name,
-            category_type: type,
-            number: 1
+            category_type: type
         });
     }
     catch(error) {
@@ -54,13 +55,16 @@ router.get('/list', async (req, res, next) => {
     }
 });
 
+// 포스트 목록의 각 페이지에 대한 포스트들 요청 (ajax)
 router.get('/list/:page', async (req, res, next) => {
     try {
-        const { types, name } = req.query;
-        const page_num = req.params.page;
+        const { types, name } = req.query; // name: 카테고리 이름, types: 카테고리 타입(main/sub)
+
+        const page_num = req.params.page; // page_num : 현재 페이지
         let content_data = [];
         let contents;
 
+        // 해당 카테고리에 대한 포스트 목록들
         if(types === 'main') {
             const category = await Maincategory.find({
                 where: { name }
@@ -82,18 +86,22 @@ router.get('/list/:page', async (req, res, next) => {
             });
         }
 
-        const start = 6 * (page_num - 1);
-        const content_count = contents.length
-        contents = contents.slice(start, start + 6)
+        const start = 6 * (page_num - 1); // 페이지네이션을 위한 포스트 목록들 중 출력 시작 인덱스
+        const content_count = contents.length // 전체 포스트의 갯수
+        contents = contents.slice(start, start + 6) // 출력할 포스트 목록들 추출 ( 현재: 6개 출력 )
 
+        // 각 포스트의 내용에 대한 요약을 추출
         for (const i in contents) {
             const data = fs.readFileSync(contents[i].contents)
 
+            // 파일의 내용에서 태그들만 제거
             const tmp = data.toString()
                 .replace(/<img(.)*\/>/gi, '')
                 .replace(/<\/(.)*>/g, '')
                 .replace(/<(.)*>/g, '')
                 .replace(/&nbsp;/gi, '')
+
+            // 태그가 제거된 내용들에 대해 최대 200자까지만 추출
             let summary = tmp.substring(0, 200);
 
             if(tmp.length > 200) {
@@ -107,8 +115,8 @@ router.get('/list/:page', async (req, res, next) => {
         }
 
         res.json({
-            content_data,
-            content_count
+            content_data, // 포스트 + 요약
+            content_count, // 전체 포스트의 갯수
         });
     }
     catch(error) {
@@ -117,6 +125,8 @@ router.get('/list/:page', async (req, res, next) => {
     }
 });
 
+
+// 게시글 작성 페이지 요청 라우터
 router.get('/write', isLoggedIn, async (req, res, next) => {
     try {
         const [ categories, bookmarks ] = await Promise.all([
@@ -144,6 +154,7 @@ router.get('/write', isLoggedIn, async (req, res, next) => {
     }
 });
 
+// 이미지 파일 업로드에 대한 multer 처리. -> uploads/images 폴더에 이미지를 저장
 router.post('/upload', isLoggedIn, upload.single('upload'), (req, res) => {
     res.json({
         "filename" : req.file.filename, 
@@ -152,6 +163,7 @@ router.post('/upload', isLoggedIn, upload.single('upload'), (req, res) => {
     });
 });
 
+// 게시글 업로드 요청 라우터
 router.post('/posting', isLoggedIn, async (req, res, next) => {
     try {
         const { category_name, type, editor1, tag_list, title } = req.body;
@@ -174,6 +186,7 @@ router.post('/posting', isLoggedIn, async (req, res, next) => {
 
         let result;
 
+        // 해당 카테고리에 대한 포스트 목록들
         if(type === 'main') {
             const category = await Maincategory.find({
                 where: { name: category_name }
@@ -254,6 +267,8 @@ router.get('/editing', isLoggedIn, async (req, res, next) => {
             tag_list += tags[i].title + ' ';
         }
 
+        tag_list = tag_list.trim();
+
         res.render('post/post_edit', {
             categories,
             bookmarks,
@@ -325,24 +340,32 @@ router.post('/editing', isLoggedIn, async (req, res, next) => {
 
                 for(const i in db_tag_list) {
                     // db의 태그 리스트에 존재하지 않는 경우
-                    if(tag.indexOf(db_tag_list[i]) < 0) {
-                        const db_tag = await Tag.find({
-                            title: db_tag_list[i]
-                        });
-                        // 연결 목록이 하나만 남은 경우
-                        const db_contents = await db_tag.getContents()
-                        if(db_contents.length == 1) {
-                            const del = await Tag.destroy({
-                                where: { title: db_tag_list[i] }
-                            });
-                        }
-                        else {
-                            sequelize.query('DELETE FROM contenttag WHERE contentId=? and tagId=?', { 
-                                replacements: [ id, db_tag.id ]
-                            }).then(aa => {
-                                    console.log(aa);
-                                });      
-                        }
+                    if(tag.indexOf(db_tag_list[i].dataValues.title) < 0) {
+                        Tag.find({
+                            where: { title: db_tag_list[i].dataValues.title }
+                        })
+                            .then(function(db_tag) {
+                                // 연결 목록이 하나만 남은 경우
+                                db_tag.getContents()
+                                    .then(function(db_contents) {
+                                        if(db_contents.length == 1) {
+                                            Tag.destroy({
+                                                where: { title: db_tag_list[i].dataValues.title }
+                                            });
+                                        }
+                                        else {
+                                            sequelize.query('DELETE FROM contenttag WHERE contentId=? and tagId=?', { 
+                                                replacements: [ parseInt(id), db_tag.id ]
+                                            });     
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        throw error;
+                                    });
+                            })
+                            .catch(function(error) {
+                                throw error;
+                            })
                     }
                 }
                 res.redirect('/post/content?content_id=' + id + "&category_title=" + category_title);
@@ -359,9 +382,45 @@ router.post('/editing', isLoggedIn, async (req, res, next) => {
     }
 });
 
+router.get('/deleting', isLoggedIn, async (req, res, next) => {
+    try {
+        const { content_id, category_title, category_name } = req.query;
+
+        const result = await Content.find({
+            where: { id: content_id }
+        });
+
+        const tag = await result.getTags();
+
+        for (const i in tag) {
+            const tag_contents = await tag[i].getContents();
+
+            sequelize.query('DELETE FROM contenttag WHERE contentId=? and tagId=?', { 
+                replacements: [ parseInt(content_id), tag[i].dataValues.id ]
+            });
+
+            if(tag_contents.length == 1) {
+                await Tag.destroy({
+                    where: { id: tag[i].dataValues.id }
+                });
+            }
+        }
+
+        await Content.destroy({
+            where: { id: content_id }
+        });
+
+        res.redirect('/post/list?name=' + category_name + '&type=' + category_title);
+    }   
+    catch(error) {
+        console.error(error);
+        next(error);
+    }
+});
+
 router.get('/content', async (req, res, next) => {
     try {
-        const { content_id, category_title } = req.query;
+        const { content_id, category_title, category_name } = req.query;
         
         const [ categories, bookmarks, content, comments ] = await Promise.all([
             Maincategory.findAll({
@@ -400,6 +459,7 @@ router.get('/content', async (req, res, next) => {
             categories,
             bookmarks,
             category_title,
+            category_name,
             content,
             post,
             tags,
@@ -480,6 +540,8 @@ router.post('/comment/edit/:id', async (req, res, next) => {
         const { password, message, content_id, category_title } = req.body;
         const comment_id = req.params.id
 
+        console.log(message);
+
         let comment = await Comment.find({
             where: { id: comment_id }
         });
@@ -493,7 +555,7 @@ router.post('/comment/edit/:id', async (req, res, next) => {
                 where: { id: comment_id }
             });
 
-            res.redirect('/post/content?content_id=' + content_id + "&category_title=" + category_title);
+            res.json(1);
         }
         else {
             res.json(0);
@@ -521,7 +583,7 @@ router.post('/comment/del/:id', async (req, res, next) => {
                 where: { id: comment_id }
             });
 
-            res.redirect('/post/content?content_id=' + content_id + "&category_title=" + category_title);
+            res.json(1);
         }
         else {
             res.json(0);

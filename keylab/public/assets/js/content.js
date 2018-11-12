@@ -105,6 +105,8 @@ $('document').ready(function() {
                 var post_num = $(this).parent().parent().attr('id');
                 var edit_window = $('#' + post_num + ' .edit .uniform');
 
+                console.log(edit_window.attr('id'))
+
                 if($('.edit_error').text() || $('.delete_error').text()) {
                     $('.edit_error').text('');
                     $('.delete_error').text('');
@@ -163,6 +165,8 @@ $('document').ready(function() {
 
             $('.edit .special').click(function() {
                 var form = $(this).closest('form');
+                var content_id =  $('.post_content').attr('id');
+                var category_title =  $('.categoryTitle').attr('id');
 
                 $.ajax({
                     url: '/post/comment/edit/' + data[i].id,
@@ -171,7 +175,7 @@ $('document').ready(function() {
                         content_id: $('.post_content').attr('id'),
                         category_title: $('.categoryTitle').attr('id'),
                         password: form.find('input').filter('.comment_password').val(),
-                        message: form.find('input').filter('.comment_message').val()
+                        message: form.find('textarea').filter('.comment_message').val()
                     },
                     success: function(data) {
                         if(!data) {
@@ -179,12 +183,17 @@ $('document').ready(function() {
                             form.find('input').filter('.comment_password').val('');
                             form.find('textarea').val('')
                         }
+                        else {
+                            location.href = '/post/content?content_id=' + content_id + "&category_title=" + category_title
+                        }
                     }
                 });
             });
 
             $('.delete .special').click(function() {
                 var form = $(this).closest('form');
+                var content_id =  $('.post_content').attr('id');
+                var category_title =  $('.categoryTitle').attr('id');
 
                 $.ajax({
                     url: '/post/comment/del/' + data[i].id,
@@ -196,8 +205,11 @@ $('document').ready(function() {
                     },
                     success: function(data) {
                         if(!data) {
-                            form.find('div').filter('.edit_error').text('비밀번호를 틀렸습니다.');
+                            form.find('div').filter('.delete_error').text('비밀번호를 틀렸습니다.');
                             form.find('input').filter('.comment_password').val('');
+                        }
+                        else {
+                            location.href = '/post/content?content_id=' + content_id + "&category_title=" + category_title
                         }
                     }
                 });

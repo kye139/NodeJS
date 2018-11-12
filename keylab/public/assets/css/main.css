@@ -4114,6 +4114,15 @@
 
 	/** content.html **/
 
+	.post_content {
+		height: auto;
+		float: none;
+	}
+
+	blockquote {
+		padding-bottom: 0px;
+	}
+
 	.comt p {
 		margin:0 0 1em 0;
 	}

@@ -12,15 +12,15 @@ block content
                 for tag in tags
                     a(href="#" class="button verysmall")= tag.title
         hr
-        div(class='post_content' id=content.id style='height: 100px') !{post}
+        div(class='post_content' id=content.id) !{post}
             
 
         if user
             .content_btn
-                a(href="/post/editing?content_id=" + content.id + "&category_title=" + category_title class="button verysmall content_edit")
+                a(href="/post/editing?content_id=" + content.id + "&category_title=" + category_title + "&category_name=" + category_name class="button verysmall content_edit")
                     i(class="fas fa-edit")
                     | 수정
-                a(href="#" class="button verysmall content_delete")
+                a(href="/post/deleting?content_id=" + content.id + "&category_title=" + category_title + "&category_name=" + category_name class="button verysmall content_delete")
                     i(class="fas fa-eraser")
                     | 삭제
         hr

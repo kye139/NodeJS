@@ -8,6 +8,8 @@ block content
                 span(class="contents_num") 
                 input(type="hidden" value=category_name class="category_name")
         div(class='post_list')
+        if user
+            a(href="/post/write" class="button special") 게시글 작성
         hr
         .page
             ul(class="pagination")

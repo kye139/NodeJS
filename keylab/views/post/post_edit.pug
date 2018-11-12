@@ -21,7 +21,7 @@ block content
             input(type="hidden" value=category_title class="category_title" name="category_title")
             div
                 input(type="text" name="title" id="post_title" value=title placeholder="제목" required)
-            textarea(name="editor1" id="editor1" rows="10" cols="80" value=content) 내용을 입력해주세요.
+            textarea(name="editor1" id="editor1" rows="10" cols="80") !{content}
             script.
                 // Replace the <textarea id="editor1"> with a CKEditor
                 // instance, using default configuration.
