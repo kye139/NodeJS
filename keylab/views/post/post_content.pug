@@ -3,7 +3,7 @@ extends ../layout
 block content
     script(src="/assets/js/content.js")
 
-    section
+    section(class='categoryTitle' id=category_title)
         header
             h1(class='content_title')= content.title
 
@@ -17,10 +17,10 @@ block content
 
         if user
             .content_btn
-                a(href="#" class="button verysmall")
+                a(href="/post/editing?content_id=" + content.id + "&category_title=" + category_title class="button verysmall content_edit")
                     i(class="fas fa-edit")
                     | 수정
-                a(href="#" class="button verysmall")
+                a(href="#" class="button verysmall content_delete")
                     i(class="fas fa-eraser")
                     | 삭제
         hr
@@ -149,7 +149,7 @@ block content
                         
         hr
 
-        form(method="post" action="/post/comment")
+        form(method="post" action="/post/comment" class="post_comment")
             input(type="hidden" name="content_id" value=content.id)
             input(type="hidden" name="category_title" value=category_title)
             div(class="row uniform")

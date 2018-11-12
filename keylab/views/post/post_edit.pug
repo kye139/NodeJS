@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+    script(src="/editor/ckeditor.js")
+    script.
+        $(document).ready(function() {
+            // 게시글 작성 버튼을 누른 경우
+            $('#posting').click(function() {
+                // 카테고리 지정이 안된 경우
+                if(!$('#post_title').val()) {
+                    alert('제목을 입력해주세요.');
+                    return;
+                }
+                $('#post_submit').submit();
+            });
+        })
+    section
+        
+        form(id="post_submit" method="post" action="/post/editing")          
+            input(type="hidden" value=id class="id" name="id")
+            input(type="hidden" value=category_title class="category_title" name="category_title")
+            div
+                input(type="text" name="title" id="post_title" value=title placeholder="제목" required)
+            textarea(name="editor1" id="editor1" rows="10" cols="80" value=content) 내용을 입력해주세요.
+            script.
+                // Replace the <textarea id="editor1"> with a CKEditor
+                // instance, using default configuration.
+                CKEDITOR.replace( 'editor1', {
+                    filebrowserUploadUrl: '/post/upload',
+                    extraPlugins : 'image2',
+                    height: 800
+                });
+            hr
+            input(type="text" name="tag_list" id="tag_list" value=tag_list placeholder="태그 입력 (공백 구분)")
+            hr
+            a(href="#" class="button special" id="posting") 게시글 작성

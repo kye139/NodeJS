@@ -78,12 +78,15 @@ var page_click = function(page_num) {
             $('.pagination .page').click(function() {
                 page_click(parseInt($(this).text(), 10));
             });
+            
             $('.pagination .first').click(function() {
                 page_click(1);
             });
+
             $('.pagination .last').click(function() {
                 page_click(page_count);
             });
+
             $('.list_component').click(function() {
                 var form = $('<form></form>').attr('method', 'get').attr('action', '/post/content');
                 $('<input></input>').attr('name', 'content_id').attr('type', 'hidden').val($(this).children().filter('h2').attr('class')).appendTo(form);

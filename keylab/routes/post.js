@@ -222,7 +222,138 @@ router.post('/posting', isLoggedIn, async (req, res, next) => {
         console.error(error);
         next(error);
     }
-})
+});
+
+router.get('/editing', isLoggedIn, async (req, res, next) => {
+    try {
+        const { content_id, category_title } = req.query;
+
+        const [ categories, bookmarks, content ] = await Promise.all([
+            Maincategory.findAll({
+                include: {
+                    model: Subcategory,
+                },
+                order: [
+                    ['order', 'asc'],
+                    [Subcategory, 'order', 'asc']
+                ]
+            }),
+            Link.findAll(),
+            Content.find({
+                where: { id: content_id }
+            }),
+        ]);
+
+        const file_content = fs.readFileSync(content.contents);
+
+        const tags = await content.getTags();
+
+        let tag_list = '';
+
+        for (const i in tags) {
+            tag_list += tags[i].title + ' ';
+        }
+
+        res.render('post/post_edit', {
+            categories,
+            bookmarks,
+            id: content.id,
+            title: content.title,
+            content: file_content,
+            tag_list,
+            category_title
+        });
+    }
+    catch(error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.post('/editing', isLoggedIn, async (req, res, next) => {
+    try {
+        const { id, title, editor1, tag_list, category_title } = req.body;
+
+        const result = await Content.find({
+            where: { id }
+        });
+
+        if(result) {
+            const post_path = 'uploads/posts/';
+            const file_name = title + new Date().valueOf();
+
+            fs.writeFile(path.join(post_path, file_name), editor1, (err) => {
+                if(err) {
+                    throw err;
+                }
+            });
+
+            const upd = await Content.update({
+                title,
+                contents: path.join(post_path, file_name),
+            }, {
+                where: { id }
+            })
+
+            // 태그 리스트 파싱
+            if(tag_list) {
+                console.log(tag_list)
+                tag = tag_list.split(' ');
+
+                for (const i in tag) {
+                    console.log(tag[i]);
+                    const tag_find = await Tag.find({
+                        where: { title: tag[i] }
+                    });
+    
+                    if(!tag_find) {
+                        const tag_add = await Tag.create({
+                            title: tag[i]
+                        });
+    
+                        result.addTags(tag_add.id)
+                    }
+                    else {
+                        result.addTags(tag_find.id);
+                    }
+                }
+
+                const db_tag_list = await result.getTags();
+
+                console.log(tag);
+                console.log(db_tag_list);
+
+                for(const i in db_tag_list) {
+                    // db의 태그 리스트에 존재하지 않는 경우
+                    if(tag.indexOf(db_tag_list[i]) < 0) {
+                        const db_tag = await Tag.find({
+                            title: db_tag_list[i]
+                        });
+                        // 연결 목록이 하나만 남은 경우
+                        const db_contents = await db_tag.getContents()
+                        if(db_contents.length == 1) {
+                            const del = await Tag.destroy({
+                                where: { title: db_tag_list[i] }
+                            });
+                        }
+                        else {
+                            const del = Tag.sequelize.query('DELETE FROM "kyelab"."tags" WHERE ')
+                        }
+                    }
+                }
+                res.redirect('/post/content?content_id=' + id + "&category_title=" + category_title);
+            }
+
+        }
+        else {
+            res.redirect('/')
+        }
+    }
+    catch(error) {
+        console.error(error);
+        next(error);
+    }
+});
 
 router.get('/content', async (req, res, next) => {
     try {
@@ -260,7 +391,8 @@ router.get('/content', async (req, res, next) => {
             content,
             post,
             tags,
-            comments
+            comments,
+            user: req.user
         });
     }
     catch(error) {
@@ -268,6 +400,23 @@ router.get('/content', async (req, res, next) => {
         next(error);
     }
 });
+
+router.get('/comment', async (req, res, next) => {
+    try {
+        const { id } = req.query;
+
+        const result = await Comment.findAll({
+            where: { contentId: id },
+            order: [['parentId', 'ASC'], ['createdAt', 'DESC']]
+        });
+
+        res.json(result);
+    }
+    catch(error) {
+        console.error(error);
+        next(error);
+    }
+})
 
 router.post('/comment', async (req, res, next) => {
     try {
@@ -305,11 +454,73 @@ router.post('/sub_comment', async (req, res, next) => {
             contentId: content_id,
             parentId: parent_id
         })
+
+        res.redirect('/post/content?content_id=' + content_id + "&category_title=" + category_title);
     }
     catch(error) {
         console.error(error);
         next(error);
     }
-})
+});
+
+router.post('/comment/edit/:id', async (req, res, next) => {
+    try {
+        const { password, message, content_id, category_title } = req.body;
+        const comment_id = req.params.id
+
+        let comment = await Comment.find({
+            where: { id: comment_id }
+        });
+
+        const result = await bcrypt.compare(password, comment.password);
+
+        if(result) {
+            comment = await Comment.update({
+                contents: message
+            }, {
+                where: { id: comment_id }
+            });
+
+            res.redirect('/post/content?content_id=' + content_id + "&category_title=" + category_title);
+        }
+        else {
+            res.json(0);
+        }
+    }
+    catch(error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.post('/comment/del/:id', async (req, res, next) => {
+    try {
+        const { password, content_id, category_title } = req.body;
+        const comment_id = req.params.id;
+
+        let comment = await Comment.find({
+            where: { id: comment_id }
+        });
+
+        const result = await bcrypt.compare(password, comment.password);
+
+        if(result) {
+            comment = await Comment.destroy({
+                where: { id: comment_id }
+            });
+
+            res.redirect('/post/content?content_id=' + content_id + "&category_title=" + category_title);
+        }
+        else {
+            res.json(0);
+        }
+    }
+    catch(error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+
 
 module.exports = router;

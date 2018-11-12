@@ -4145,8 +4145,12 @@
 		display: none;
 	}
 
-	.reply .selected, .edit .selected, .delete .selected {
-		display: block;
+	.reply .selected, .edit .selected {
+		display: inline;
+	}
+
+	.delete .selected {
+		display: inline-block
 	}
 
 	.reply .uniform {
@@ -4159,13 +4163,28 @@
 		margin: auto;
 	}
 
-	.error p {
+	.error {
 		color: red;
 		font-weight: bold;
+		margin-bottom: 5px;
+		text-align: center;
 	}
 
 	.content_title {
 		font-size: 2.5em;
+	}
+
+	.delete {
+		text-align: center;
+	}
+
+	.uniform textarea {
+		resize: none;
+		height: 200px;
+	}
+
+	#post_title {
+		margin-bottom: 10px;
 	}
 
 	/** notice.html **/
