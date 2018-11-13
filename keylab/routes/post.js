@@ -406,6 +406,10 @@ router.get('/deleting', isLoggedIn, async (req, res, next) => {
             }
         }
 
+        await Comment.destroy({
+            where: { contentId: result.dataValues.id }
+        })
+
         await Content.destroy({
             where: { id: content_id }
         });
@@ -576,9 +580,21 @@ router.post('/comment/del/:id', async (req, res, next) => {
             where: { id: comment_id }
         });
 
-        const result = await bcrypt.compare(password, comment.password);
+        if (comment) {
+            const result = await bcrypt.compare(password, comment.password);
+        }
+        else {
+            res.json(-2);
+        }
 
         if(result) {
+            const childComment = await Comment.findAll({
+                where: { parentId: comment.dataValues.id }
+            });
+
+            if(childComment) {
+                res.json(-1);
+            }
             comment = await Comment.destroy({
                 where: { id: comment_id }
             });

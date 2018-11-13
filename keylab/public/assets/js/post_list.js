@@ -69,7 +69,7 @@ var page_click = function(page_num) {
             }
 
             var end = $('<li></li>').html($('<span></span>').html('끝 페이지').addClass('button').addClass('last'));
-            if (page_count == page_num) {
+            if (page_count == 0 || page_count == page_num) {
                 end.children().addClass('disabled');
             }
 

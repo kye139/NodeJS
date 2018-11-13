@@ -76,7 +76,8 @@ $('document').ready(function() {
             $('.reply_btn').click(function() {
                 // 댓글 인덱스 번호
                 var post_num = $(this).parent().parent().attr('id');
-                var reply_window = $('#' + post_num + ' .reply .uniform');
+                var reply_window = $(this).parents('div').filter('.comment_box')//.find('div').filter('.uniform');
+                // var reply_window = $('.comment_box #' + post_num); //+ ' .reply .uniform');
 
                 if($('.edit_error').text() || $('.delete_error').text()) {
                     $('.edit_error').text('');
@@ -103,7 +104,7 @@ $('document').ready(function() {
             $('.edit_btn').click(function() {
                 // 댓글 인덱스 번호
                 var post_num = $(this).parent().parent().attr('id');
-                var edit_window = $('#' + post_num + ' .edit .uniform');
+                var edit_window = $('.comment_box #' + post_num + ' .edit .uniform');
 
                 console.log(edit_window.attr('id'))
 
@@ -132,7 +133,7 @@ $('document').ready(function() {
             $('.delete_btn').click(function() {
                 // 댓글 인덱스 번호
                 var post_num = $(this).parent().parent().attr('id');
-                var del_window = $('#' + post_num + ' .delete .uniform');
+                var del_window = $('.comment_box #' + post_num + ' .delete .uniform');
 
                 if($('.edit_error').text() || $('.delete_error').text()) {
                     $('.edit_error').text('');
@@ -204,7 +205,15 @@ $('document').ready(function() {
                         password: form.find('input').filter('.comment_password').val()
                     },
                     success: function(data) {
-                        if(!data) {
+                        if(data == -2) {
+                            form.find('div').filter('.delete_error').text('서버 에러.');
+                            form.find('input').filter('.comment_password').val('');
+                        }
+                        else if(data == -1) {
+                            form.find('div').filter('.delete_error').text('대댓글 존재 시 삭제가 불가능합니다.');
+                            form.find('input').filter('.comment_password').val('');
+                        }
+                        if(data == 0) {
                             form.find('div').filter('.delete_error').text('비밀번호를 틀렸습니다.');
                             form.find('input').filter('.comment_password').val('');
                         }
